@@ -125,6 +125,12 @@
       font-weight: 700;
       flex-shrink: 0;
     }
+
+    .bg-custom-hero {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
   </style>
  </head>
  <body class="h-full bg-slate-50 text-slate-800">
@@ -137,9 +143,12 @@
     </div>
    </div>
    
-   <div id="main-menu" class="h-full flex flex-col items-center justify-center p-6 hidden bg-gradient-to-br from-navy via-[#0f2744] to-navy-dark relative overflow-hidden">
-    <div class="absolute -top-32 -left-32 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+   <div id="main-menu" class="h-full flex flex-col items-center justify-center p-6 hidden bg-gradient-to-br from-navy via-[#0f2744] to-navy-dark relative overflow-hidden bg-custom-hero">
+    
+    <div id="front-bg-overlay" class="absolute inset-0 bg-gradient-to-b from-navy/85 via-navy/90 to-navy-dark/95 z-0 transition-all duration-500"></div>
+
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none z-0"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none z-0"></div>
 
     <div class="text-center fade-in max-w-2xl w-full relative z-10">
      <div class="mb-8 flex flex-col items-center">
@@ -172,12 +181,7 @@
     <div class="card p-8 max-w-md w-full fade-in">
      <button onclick="showPanel('main-menu')" class="mb-6 text-slate-500 hover:text-navy flex items-center gap-2 font-medium transition-colors">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> Kembali ke Menu </button>
-     <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
-       <svg class="w-5 h-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /></svg>
-      </div>
-      <h2 class="text-2xl font-bold text-navy">Login Admin</h2>
-     </div>
+     <h2 class="text-2xl font-bold text-navy mb-2">Login Admin</h2>
      <p class="text-slate-500 text-sm mb-6">Masukkan kata sandi admin untuk mengelola sistem.</p>
      <div class="space-y-4">
       <div class="relative"><input type="password" id="admin-password" class="input-field w-full pr-12" placeholder="Masukkan Password Admin" onkeydown="if(event.key==='Enter') adminLogin()"> <button onclick="togglePassword('admin-password', 'admin-eye')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy">
@@ -207,12 +211,7 @@
     <div class="card p-8 max-w-md w-full fade-in">
      <button onclick="showPanel('main-menu')" class="mb-6 text-slate-500 hover:text-navy flex items-center gap-2 font-medium transition-colors">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> Kembali ke Menu </button>
-     <div class="flex items-center gap-3 mb-4">
-      <div class="w-10 h-10 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
-       <svg class="w-5 h-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-      </div>
-      <h2 class="text-2xl font-bold text-navy">Login Siswa</h2>
-     </div>
+     <h2 class="text-2xl font-bold text-navy mb-2">Login Siswa</h2>
      <p class="text-slate-500 text-sm mb-6">Masukkan akun siswa yang diberikan oleh admin.</p>
      <div class="space-y-4">
       <input type="text" id="student-username" class="input-field w-full" placeholder="Username Siswa" onkeydown="if(event.key==='Enter') studentLogin()">
@@ -228,7 +227,7 @@
    <div id="admin-dashboard" class="h-full flex flex-col hidden bg-slate-50">
     <header class="bg-navy shadow-lg px-6 py-4 flex items-center justify-between border-b border-gold/20">
      <div class="flex items-center gap-4">
-      <div class="w-11 h-11 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
+      <div class="w-11 h-11 bg-gold rounded-xl flex items-center justify-center shadow-md">
        <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /></svg>
       </div>
       <div>
@@ -336,7 +335,7 @@
      <div id="admin-results" class="hidden fade-in">
       <div class="card p-6 md:p-8">
        <h3 class="text-xl font-bold text-navy mb-2">Hasil Ujian Siswa</h3>
-       <p class="text-slate-500 text-sm mb-6">Rekapitulasi nilai dan hasil akhir seluruh siswa yang telah menyelesaikan ujian (disimpan hingga 30 hari).</p>
+       <p class="text-slate-500 text-sm mb-6">Rekapitulasi nilai dan hasil akhir seluruh siswa yang telah menyelesaikan ujian.</p>
        <div id="results-list" class="space-y-3">
         <p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>
        </div>
@@ -387,20 +386,32 @@
         </div>
         
         <div class="pt-6 border-t border-slate-200">
-         <h4 class="font-semibold text-navy mb-3">Kustomisasi Halaman Depan & Logo</h4>
+         <h4 class="font-semibold text-navy mb-3">Kustomisasi Halaman Depan</h4>
          <div class="space-y-4">
           <div>
             <label class="block text-sm font-semibold text-slate-700 mb-2">Judul Aplikasi</label>
             <input type="text" id="setting-app-title" class="input-field w-full" placeholder="Tes Kecermatan Polri" onkeydown="if(event.key==='Enter') saveFrontPageSettings()">
           </div>
+          
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-2">Foto Logo Web (Format JPG/PNG, Maksimal 5 MB)</label>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">Logo Halaman Depan (Format: JPG / PNG, Maks: 5 MB)</label>
             <input type="file" id="setting-app-logo" accept=".jpg,.jpeg,.png" class="input-field w-full p-2 bg-white cursor-pointer">
-            <div id="logo-preview-container" class="mt-3 hidden bg-slate-50 p-4 rounded-xl border border-slate-200 flex justify-center">
+            <div id="logo-preview-container" class="mt-3 hidden bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col items-center">
+              <span class="text-xs font-semibold text-slate-400 mb-2">Preview Logo:</span>
               <img id="logo-preview" src="" class="h-24 max-w-full object-contain drop-shadow-md">
             </div>
           </div>
-          <button onclick="saveFrontPageSettings()" class="btn-primary w-full py-3.5 rounded-xl font-semibold shadow-md">Simpan Tampilan</button>
+
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">Foto Background Halaman Depan (Format: JPG / PNG, Maks: 5 MB)</label>
+            <input type="file" id="setting-app-bg" accept=".jpg,.jpeg,.png" class="input-field w-full p-2 bg-white cursor-pointer">
+            <div id="bg-preview-container" class="mt-3 hidden bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col items-center">
+              <span class="text-xs font-semibold text-slate-400 mb-2">Preview Background:</span>
+              <img id="bg-preview" src="" class="h-32 w-full object-cover rounded-lg shadow-inner">
+            </div>
+          </div>
+
+          <button onclick="saveFrontPageSettings()" class="btn-primary w-full py-3.5 rounded-xl font-semibold shadow-md">Simpan Tampilan &amp; Logo</button>
           <p id="display-save-message" class="text-sm mt-2 hidden font-medium"></p>
          </div>
         </div>
@@ -413,7 +424,7 @@
    <div id="student-dashboard" class="h-full flex flex-col hidden bg-slate-50">
     <header class="bg-navy shadow-lg px-6 py-4 flex items-center justify-between border-b border-gold/20">
      <div class="flex items-center gap-4">
-      <div class="w-11 h-11 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
+      <div class="w-11 h-11 bg-gold rounded-xl flex items-center justify-center shadow-md">
        <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
       </div>
       <div>
@@ -433,11 +444,25 @@
         <p class="text-slate-400 text-center py-12">Tidak ada paket soal tersedia</p>
        </div>
       </div>
+      
+      <!-- RIWAYAT UJIAN Dikelompokkan Berdasarkan Paket Soal & Filter Waktu -->
       <div class="card p-6 md:p-8">
-       <h3 class="text-xl font-bold text-navy mb-2">Riwayat Hasil Ujian</h3>
-       <p class="text-slate-500 text-sm mb-6">Daftar nilai dan rekapitulasi ujian yang telah Anda kerjakan (disimpan selama 30 hari).</p>
-       <div id="student-results-list" class="space-y-3">
-        <p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>
+       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-navy mb-1">Riwayat Hasil Ujian Saya</h3>
+          <p class="text-slate-500 text-sm">Dikelompokkan berdasarkan paket soal dan dapat difilter berdasarkan waktu.</p>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <select id="student-filter-time" onchange="renderStudentResults()" class="input-field text-sm py-2 px-3 bg-white">
+            <option value="all">Semua Waktu</option>
+            <option value="today">Hari Ini</option>
+            <option value="week">7 Hari Terakhir</option>
+            <option value="month">30 Hari Terakhir</option>
+          </select>
+        </div>
+       </div>
+       <div id="student-results-list" class="space-y-6">
+        <p class="text-slate-400 text-center py-12">Belum ada riwayat ujian</p>
        </div>
       </div>
      </div>
@@ -446,7 +471,7 @@
    
    <div id="test-preparation" class="h-full flex flex-col items-center justify-center p-6 hidden bg-slate-100">
     <div class="card p-8 md:p-10 max-w-lg w-full text-center fade-in">
-     <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gold to-gold-dark rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg overflow-hidden mini-logo-spot">
+     <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-gold to-gold-dark rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
       <svg class="w-8 h-8 md:w-10 md:h-10 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
      </div>
      <h2 class="text-2xl font-bold text-navy mb-1">Konfirmasi & Petunjuk Pengerjaan</h2>
@@ -468,10 +493,7 @@
     </div>
    </div>
    
-   <div id="countdown-screen" class="h-full flex flex-col items-center justify-center hidden bg-navy relative">
-    <div class="absolute top-6 left-6 flex items-center gap-3">
-     <div class="w-12 h-12 bg-gold rounded-xl flex items-center justify-center shadow-lg overflow-hidden mini-logo-spot"></div>
-    </div>
+   <div id="countdown-screen" class="h-full flex flex-col items-center justify-center hidden bg-navy">
     <div class="text-center fade-in">
      <p class="text-2xl text-slate-300 mb-4 font-medium">Ujian Segera Dimulai...</p>
      <div id="countdown-number" class="text-9xl font-extrabold text-gold drop-shadow-lg">3</div>
@@ -479,13 +501,8 @@
    </div>
    
    <div id="test-screen" class="h-full flex flex-col hidden bg-slate-50">
-    <div class="bg-gradient-to-r from-navy to-navy-dark px-6 py-3 shadow-md border-b border-gold/30 flex items-center justify-between">
-     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
-       <svg class="w-5 h-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      </div>
-     </div>
-     <div class="flex items-center gap-6 md:gap-10">
+    <div class="bg-gradient-to-r from-navy to-navy-dark px-4 py-3 shadow-md border-b border-gold/30">
+     <div class="flex items-center justify-center gap-6 md:gap-10">
       <div class="bg-white/10 border border-gold/40 px-4 py-1.5 rounded-xl backdrop-blur-sm">
        <span class="text-gold text-xs sm:text-sm font-semibold">Kolom: <span id="current-column" class="text-sm sm:text-lg text-white font-bold">1/10</span></span>
       </div>
@@ -494,10 +511,9 @@
        <span id="timer-display" class="text-white text-sm sm:text-lg font-bold">60</span><span class="text-gold text-xs">detik</span>
       </div>
      </div>
-     <div class="w-10"></div>
-    </div>
-    <div class="h-1.5 bg-white/20 rounded-full overflow-hidden max-w-lg mx-auto w-full">
+     <div class="h-1.5 bg-white/20 mt-3 rounded-full overflow-hidden max-w-lg mx-auto">
       <div id="timer-progress" class="h-full progress-fill" style="width: 100%"></div>
+     </div>
     </div>
     
     <div class="flex-1 overflow-auto bg-slate-100 p-4 sm:p-8 flex flex-col justify-center">
@@ -522,10 +538,7 @@
     </div>
    </div>
    
-   <div id="column-break" class="h-full flex flex-col items-center justify-center hidden bg-navy relative">
-    <div class="absolute top-6 left-6 flex items-center gap-3">
-     <div class="w-12 h-12 bg-gold rounded-xl flex items-center justify-center shadow-lg overflow-hidden mini-logo-spot"></div>
-    </div>
+   <div id="column-break" class="h-full flex flex-col items-center justify-center hidden bg-navy">
     <div class="text-center fade-in">
      <p class="text-3xl text-white font-bold mb-2">Kolom <span id="break-column-number" class="text-gold">1</span> Selesai</p>
      <p class="text-slate-300 mb-6 font-medium">Bersiap untuk kolom berikutnya...</p>
@@ -534,11 +547,8 @@
    </div>
    
    <div id="test-result" class="h-full flex flex-col hidden bg-slate-100">
-    <header class="bg-navy shadow-md px-6 py-4 border-b border-gold/20 flex items-center gap-4">
-     <div class="w-10 h-10 bg-gold rounded-xl flex items-center justify-center shadow-md overflow-hidden mini-logo-spot">
-      <svg class="w-5 h-5 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-     </div>
-     <h1 class="text-xl font-bold text-gold tracking-wide">Hasil Tes Kecermatan Polri</h1>
+    <header class="bg-navy shadow-md px-6 py-4 border-b border-gold/20">
+     <h1 class="text-xl font-bold text-gold text-center tracking-wide">Hasil Tes Kecermatan Polri</h1>
     </header>
     <div class="flex-1 overflow-auto p-6 md:p-8">
      <div class="max-w-4xl mx-auto space-y-6">
@@ -593,8 +603,9 @@
        </div>
       </div>
       
+      <!-- ANALISIS KEMAMPUAN SISWA DALAM BENTUK KALIMAT & SARAN PERBAIKAN -->
       <div class="card p-8">
-       <h3 class="text-xl font-bold text-navy mb-4">Analisis Hasil Psikologi</h3>
+       <h3 class="text-xl font-bold text-navy mb-4">Analisis Kemampuan & Saran Perbaikan</h3>
        <div id="result-analysis" class="space-y-4"></div>
       </div>
       
@@ -689,7 +700,8 @@
       adminPassword: '1234',
       adminEmail: '',
       frontPageTitle: 'Tes Kecermatan Polri',
-      frontPageLogo: null
+      frontPageLogo: null,
+      frontPageBg: null
     };
     
     let currentStudent = null;
@@ -704,6 +716,9 @@
     let editingPackageId = null;
     let pendingTestPackageId = null;
     
+    let tempCompressedLogo = null;
+    let tempCompressedBg = null;
+    
     const availableSymbols = [
       '±', '×', '÷', '√', '∞', '≈', '≠', '≤', '≥', '∑', '∏', '∫', '∂', '∇', '∆',
       'α', 'β', 'γ', 'δ', 'ε', 'θ', 'λ', 'μ', 'π', 'σ', 'φ', 'ψ', 'ω', 'Ω', 'Φ', 'Π',
@@ -716,13 +731,11 @@
       '€', '£', '¥', '₹', '₽', '₩', '฿', '₪', '₫', '₱',
       '§', '¶', '†', '‡', '‰', '‱', '⌘', '⌥', '⏎', '⌫', '⌦'
     ];
-    
-    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 
     window.dataHandler = {
       onDataChanged(data) {
         if (!data || data.length === 0) {
-          appData = { students: [], packages: [], trash: [], results: [], activities: [], adminPassword: '1234', adminEmail: '', frontPageTitle: 'Tes Kecermatan Polri', frontPageLogo: null };
+          appData = { students: [], packages: [], trash: [], results: [], activities: [], adminPassword: '1234', adminEmail: '', frontPageTitle: 'Tes Kecermatan Polri', frontPageLogo: null, frontPageBg: null };
         } else {
           data.forEach(record => {
             if (record.type === 'app_data') {
@@ -736,14 +749,6 @@
             }
           });
         }
-        
-        if (appData.results) {
-          appData.results = appData.results.filter(r => {
-            const time = new Date(r.completedAt).getTime();
-            return (Date.now() - time) <= THIRTY_DAYS_MS;
-          });
-        }
-
         updateAllViews();
       }
     };
@@ -771,7 +776,7 @@
               <div class="absolute inset-0 bg-gradient-to-tr from-gold/40 via-navy-light to-gold/30 rounded-3xl blur-md"></div>
               <div class="relative w-full h-full rounded-3xl overflow-hidden border-2 border-gold/85 shadow-[0_12px_45px_rgba(212,175,55,0.4)] backdrop-blur-xl bg-navy/90 flex items-center justify-center p-2">
                 <div class="absolute inset-0 bg-gradient-to-b from-navy/20 via-transparent to-navy/70 z-10 pointer-events-none"></div>
-                <img src="${appData.frontPageLogo}" class="w-full h-full object-cover rounded-2xl relative z-0 transform hover:scale-105 transition-all duration-500">
+                <img src="${appData.frontPageLogo}" class="w-full h-full object-contain rounded-2xl relative z-0 transform hover:scale-105 transition-all duration-500">
               </div>
             `;
           }
@@ -781,21 +786,18 @@
             previewImg.src = appData.frontPageLogo;
             previewContainer.classList.remove('hidden');
           }
+        }
 
+        if (appData.frontPageBg) {
           const mainMenu = document.getElementById('main-menu');
           if (mainMenu) {
-            mainMenu.style.backgroundImage = `linear-gradient(135deg, rgba(10,25,47,0.92) 0%, rgba(15,39,68,0.88) 50%, rgba(2,12,27,0.95) 100%), url(${appData.frontPageLogo})`;
-            mainMenu.style.backgroundSize = 'cover';
-            mainMenu.style.backgroundPosition = 'center';
+            mainMenu.style.backgroundImage = `url('${appData.frontPageBg}')`;
           }
-
-          document.querySelectorAll('.mini-logo-spot').forEach(el => {
-            el.innerHTML = `<img src="${appData.frontPageLogo}" class="w-full h-full object-cover rounded-xl">`;
-          });
-        } else {
-          const mainMenu = document.getElementById('main-menu');
-          if (mainMenu) {
-            mainMenu.style.backgroundImage = '';
+          const previewBgContainer = document.getElementById('bg-preview-container');
+          const previewBgImg = document.getElementById('bg-preview');
+          if (previewBgContainer && previewBgImg) {
+            previewBgImg.src = appData.frontPageBg;
+            previewBgContainer.classList.remove('hidden');
           }
         }
     }
@@ -828,68 +830,95 @@
       }
     }
     
+    function compressAndResizeImage(file, maxDimension, quality, callback) {
+      if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
+        showToast('Format gambar harus JPG atau PNG', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Ukuran file maksimal 5 MB', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          if (width > height) {
+            if (width > maxDimension) {
+              height = Math.round((height * maxDimension) / width);
+              width = maxDimension;
+            }
+          } else {
+            if (height > maxDimension) {
+              width = Math.round((width * maxDimension) / height);
+              height = maxDimension;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          callback(compressedDataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     document.getElementById('setting-app-logo').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
-        if (file.size > 5 * 1024 * 1024) {
-          showToast('Ukuran file logo maksimal 5 MB', 'error');
-          this.value = '';
-          return;
-        }
-        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
-          showToast('Format file harus JPG atau PNG', 'error');
-          this.value = '';
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
+        compressAndResizeImage(file, 400, 0.85, function(compressedUrl) {
           const previewContainer = document.getElementById('logo-preview-container');
           const previewImg = document.getElementById('logo-preview');
-          previewImg.src = e.target.result;
+          previewImg.src = compressedUrl;
           previewContainer.classList.remove('hidden');
-        }
-        reader.readAsDataURL(file);
+          tempCompressedLogo = compressedUrl;
+        });
+      }
+    });
+
+    document.getElementById('setting-app-bg').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        compressAndResizeImage(file, 1280, 0.75, function(compressedUrl) {
+          const previewContainer = document.getElementById('bg-preview-container');
+          const previewImg = document.getElementById('bg-preview');
+          previewImg.src = compressedUrl;
+          previewContainer.classList.remove('hidden');
+          tempCompressedBg = compressedUrl;
+        });
       }
     });
 
     function saveFrontPageSettings() {
       const title = document.getElementById('setting-app-title').value.trim();
-      const logoInput = document.getElementById('setting-app-logo');
       const msgEl = document.getElementById('display-save-message');
 
       if (title) appData.frontPageTitle = title;
-
-      if (logoInput.files && logoInput.files[0]) {
-        const file = logoInput.files[0];
-        if (file.size > 5 * 1024 * 1024) {
-          msgEl.textContent = 'Ukuran file logo maksimal 5 MB';
-          msgEl.className = 'text-sm font-semibold text-rose-500 mt-2 block';
-          msgEl.classList.remove('hidden');
-          return;
-        }
-        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
-          msgEl.textContent = 'Format file harus JPG atau PNG';
-          msgEl.className = 'text-sm font-semibold text-rose-500 mt-2 block';
-          msgEl.classList.remove('hidden');
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          appData.frontPageLogo = e.target.result;
-          finalizeSaveSettings(msgEl);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        finalizeSaveSettings(msgEl);
+      if (tempCompressedLogo) {
+        appData.frontPageLogo = tempCompressedLogo;
+        tempCompressedLogo = null;
       }
-    }
+      if (tempCompressedBg) {
+        appData.frontPageBg = tempCompressedBg;
+        tempCompressedBg = null;
+      }
 
-    function finalizeSaveSettings(msgEl) {
       saveAppData();
       updateAllViews();
-      msgEl.textContent = 'Tampilan berhasil disimpan!';
+      msgEl.textContent = 'Tampilan, logo, & background berhasil disimpan ke Firebase!';
       msgEl.className = 'text-sm font-semibold text-emerald-600 mt-2 block';
-      setTimeout(() => msgEl.classList.add('hidden'), 3000);
+      setTimeout(() => msgEl.classList.add('hidden'), 3500);
+      showToast('Pengaturan berhasil disimpan');
     }
     
     function showPanel(panelId) {
@@ -1161,10 +1190,7 @@
       const container = document.getElementById('results-list');
       if (!container) return;
       
-      const validResults = (appData.results || []).filter(r => {
-        const time = new Date(r.completedAt).getTime();
-        return (Date.now() - time) <= THIRTY_DAYS_MS;
-      });
+      const validResults = (appData.results || []);
       
       if (validResults.length === 0) {
         container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>';
@@ -1761,30 +1787,80 @@
       showPanel('test-preparation');
     }
     
+    // RENDER RIWAYAT UJIAN: Dikelompokkan Berdasarkan Paket Soal & Difilter Berdasarkan Waktu
     function renderStudentResults() {
       const container = document.getElementById('student-results-list');
       if (!currentStudent) return;
       
-      const studentResults = appData.results.filter(r => r.studentId === currentStudent.id);
+      const filterTime = document.getElementById('student-filter-time').value;
+      const now = new Date().getTime();
+
+      let studentResults = appData.results.filter(r => r.studentId === currentStudent.id);
+
+      // Filter berdasarkan waktu ujian
+      if (filterTime === 'today') {
+        studentResults = studentResults.filter(r => {
+          const rDate = new Date(r.completedAt);
+          const today = new Date();
+          return rDate.toDateString() === today.toDateString();
+        });
+      } else if (filterTime === 'week') {
+        const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+        studentResults = studentResults.filter(r => new Date(r.completedAt).getTime() >= sevenDaysAgo);
+      } else if (filterTime === 'month') {
+        const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+        studentResults = studentResults.filter(r => new Date(r.completedAt).getTime() >= thirtyDaysAgo);
+      }
+
       if (studentResults.length === 0) {
-        container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>';
+        container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada riwayat ujian yang sesuai</p>';
         return;
       }
-      
-      container.innerHTML = studentResults.map(result => `
-        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
-          <div>
-            <p class="font-bold text-navy">${result.packageName}</p>
-            <p class="text-xs text-slate-500">${new Date(result.completedAt).toLocaleDateString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</p>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="text-right">
-              <p class="text-2xl font-extrabold ${getScoreColor(result.score)}">${result.score}</p>
-              <p class="text-xs font-semibold text-slate-500">${getScoreCategory(result.score)}</p>
+
+      // Kelompokkan berdasarkan Paket Soal
+      const groupedByPackage = {};
+      studentResults.forEach(result => {
+        if (!groupedByPackage[result.packageId]) {
+          groupedByPackage[result.packageId] = {
+            packageName: result.packageName,
+            attempts: []
+          };
+        }
+        groupedByPackage[result.packageId].attempts.push(result);
+      });
+
+      let html = '';
+      for (const pkgId in groupedByPackage) {
+        const group = groupedByPackage[pkgId];
+        // Urutkan berdasarkan waktu terbaru
+        group.attempts.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+
+        html += `
+          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl shadow-sm">
+            <h4 class="font-bold text-navy text-lg mb-3 flex items-center gap-2">
+              <span>📦</span> ${group.packageName} 
+              <span class="text-xs bg-gold/20 text-gold-dark px-2.5 py-1 rounded-full font-semibold">(${group.attempts.length} Percobaan)</span>
+            </h4>
+            <div class="space-y-3">
+              ${group.attempts.map((res, index) => `
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-100 shadow-sm gap-3">
+                  <div>
+                    <p class="font-semibold text-navy text-sm">Percobaan ke-${group.attempts.length - index}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Waktu: ${new Date(res.completedAt).toLocaleDateString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</p>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <div class="text-right">
+                      <p class="text-xl font-extrabold ${getScoreColor(res.score)}">${res.score} <span class="text-xs font-normal text-slate-500">(${getScoreCategory(res.score)})</span></p>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }
+
+      container.innerHTML = html;
     }
     
     function startTest(packageId) {
@@ -2163,22 +2239,73 @@
       });
     }
     
+    // ANALISIS KEMAMPUAN SISWA DALAM BENTUK KALIMAT & SARAN PERBAIKAN
     function generateAnalysis(result) {
-      const { score } = result;
-      let analysis = [];
+      const { score, totalCorrect, totalWrong, metrics } = result;
+      let analysisList = [];
+
+      // Analisis Umum & Tingkat Kecermatan
       if (score >= 90) {
-        analysis.push({ type: 'success', icon: '🏆', title: 'Nilai Akhir: Sangat Baik', text: 'Tingkat kecermatan sangat tinggi. Konsentrasi dan refleks sangat optimal.' });
+        analysisList.push({
+          type: 'success',
+          icon: '🏆',
+          title: 'Analisis Kemampuan Umum: Sangat Istimewa',
+          text: `Siswa menunjukkan tingkat kecermatan dan konsentrasi yang sangat luar biasa dengan total jawaban benar sebanyak ${totalCorrect} soal. Kemampuan koordinasi motorik mata dan ketepatan keputusan di bawah tekanan waktu sudah sangat matang dan siap menghadapi ujian seleksi sesungguhnya.`
+        });
       } else if (score >= 75) {
-        analysis.push({ type: 'info', icon: '✅', title: 'Nilai Akhir: Baik', text: 'Tingkat kecermatan baik. Pertahankan fokus dan ketelitian.' });
+        analysisList.push({
+          type: 'success',
+          icon: '✅',
+          title: 'Analisis Kemampuan Umum: Baik dan Stabil',
+          text: `Siswa memiliki performa yang baik dengan tingkat ketelitian yang memadai. Kecepatan pengerjaan sudah cukup konsisten, namun masih terdapat beberapa kesalahan kecil yang dapat dioptimalkan melalui latihan rutin.`
+        });
+      } else if (score >= 60) {
+        analysisList.push({
+          type: 'warning',
+          icon: '⚠️',
+          title: 'Analisis Kemampuan Umum: Cukup / Perlu Peningkatan',
+          text: `Siswa mampu menyelesaikan sebagian besar soal, namun tingkat ketelitian dan stabilitas pada kolom-kolom akhir mulai menurun. Hal ini mengindikasikan adanya kelelahan mental atau kurangnya manajemen waktu per kolom.`
+        });
       } else {
-        analysis.push({ type: 'warning', icon: '⚠️', title: 'Nilai Akhir: Cukup / Perlu Latihan', text: 'Perlu latihan lebih intensif untuk meningkatkan kecepatan dan akurasi.' });
+        analysisList.push({
+          type: 'danger',
+          icon: '🚨',
+          title: 'Analisis Kemampuan Umum: Perlu Perhatian Khusus',
+          text: `Tingkat ketepatan masih berada di bawah standar kelulusan. Siswa cenderung terburu-buru sehingga melakukan banyak kesalahan (${totalWrong} jawaban salah) atau kurang terbiasa dengan ritme cepat tes kecermatan.`
+        });
       }
-      return analysis.map(item => `
-        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex gap-4 items-start shadow-sm">
+
+      // Analisis Keajengan & Ketahanan
+      if (metrics.avgConsistency >= 80) {
+        analysisList.push({
+          type: 'info',
+          icon: '📈',
+          title: 'Stabilitas & Keajengan Kerja: Sangat Konsisten',
+          text: 'Grafik menunjukkan grafik kerja yang stabil dari kolom pertama hingga akhir tanpa penurunan performa yang drastis. Ini menunjukkan ketahanan mental yang prima di bawah tekanan.'
+        });
+      } else {
+        analysisList.push({
+          type: 'warning',
+          icon: '📉',
+          title: 'Stabilitas & Keajengan Kerja: Fluktuatif',
+          text: 'Terdeteksi fluktuasi grafik kerja yang cukup signifikan antar kolom. Saran perbaikan: latih konsistensi tempo pengerjaan agar ritme kerja tetap stabil dari awal hingga kolom kesepuluh.'
+        });
+      }
+
+      // Saran Perbaikan Konkret
+      analysisList.push({
+        type: 'suggestion',
+        icon: '💡',
+        title: 'Saran & Rekomendasi Perbaikan:',
+        text: `1. Perbanyak simulasi latihan tes kecermatan dengan durasi ketat 60 detik per kolom untuk melatih refleks.\n2. Fokus pada keseimbangan antara kecepatan dan ketelitian untuk meminimalisir jawaban salah.\n3. Lakukan evaluasi pada kolom-kolom yang memiliki persentase kesalahan tertinggi guna mengenali pola kelemahan pribadi.`
+      });
+
+      return analysisList.map(item => `
+        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex gap-4 items-start shadow-sm">
           <div class="text-3xl">${item.icon}</div>
           <div>
-            <h4 class="font-bold text-navy">${item.title}</h4>
-            <p class="text-sm text-slate-600 mt-1">${item.text}</p>
+            <h4 class="font-bold text-navy text-base">${item.title}</h4>
+            <p class="text-sm text-slate-700 mt-1.5 whitespace-pre-line leading-relaxed">${item.text}</p>
           </div>
         </div>
       `).join('');
@@ -2241,6 +2368,7 @@
     window.closeConfirm = closeConfirm;
     window.saveFrontPageSettings = saveFrontPageSettings;
     window.deleteResult = deleteResult;
+    window.renderStudentResults = renderStudentResults;
 
     window.onload = initApp;
   </script>
