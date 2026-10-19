@@ -242,8 +242,8 @@
      <div class="flex flex-wrap gap-3 mb-6 bg-white p-2 rounded-2xl shadow-sm border border-slate-200">
       <button onclick="showAdminTab('students')" class="tab-btn active" id="tab-students">Kelola Siswa</button> 
       <button onclick="showAdminTab('questions')" class="tab-btn" id="tab-questions">Kelola Soal</button> 
+      <button onclick="showAdminTab('results')" class="tab-btn" id="tab-results">Hasil Tes Siswa</button>
       <button onclick="showAdminTab('monitoring')" class="tab-btn" id="tab-monitoring">Monitoring</button> 
-      <button onclick="showAdminTab('results')" class="tab-btn" id="tab-results">Hasil Ujian</button> 
       <button onclick="showAdminTab('trash')" class="tab-btn" id="tab-trash">Sampah</button> 
       <button onclick="showAdminTab('settings')" class="tab-btn" id="tab-settings">Pengaturan</button>
      </div>
@@ -321,6 +321,49 @@
        </div>
       </div>
      </div>
+
+     <div id="admin-results" class="hidden fade-in">
+      <div class="card p-6 md:p-8">
+       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+         <h3 class="text-xl font-bold text-navy">Riwayat Hasil Tes Siswa</h3>
+         <p class="text-slate-500 text-sm">Pantau dan kelola seluruh riwayat pengerjaan ujian siswa.</p>
+        </div>
+        <button onclick="clearAllTestResultsAdmin()" class="btn-danger px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md whitespace-nowrap">Hapus Semua Riwayat</button>
+       </div>
+
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div>
+         <label class="block text-xs font-bold text-slate-600 mb-1">Filter Jenis Soal:</label>
+         <select id="admin-filter-type" onchange="renderAdminTestResults()" class="input-field w-full text-sm">
+          <option value="all">Semua Jenis Soal</option>
+          <option value="number">Angka Hilang</option>
+          <option value="letter">Huruf Hilang</option>
+          <option value="symbol">Simbol Hilang</option>
+         </select>
+        </div>
+        <div>
+         <label class="block text-xs font-bold text-slate-600 mb-1">Filter Siswa:</label>
+         <select id="admin-filter-student" onchange="renderAdminTestResults()" class="input-field w-full text-sm">
+          <option value="all">Semua Siswa</option>
+         </select>
+        </div>
+        <div>
+         <label class="block text-xs font-bold text-slate-600 mb-1">Filter Waktu Pengerjaan:</label>
+         <select id="admin-filter-time" onchange="renderAdminTestResults()" class="input-field w-full text-sm">
+          <option value="all">Semua Waktu</option>
+          <option value="today">Hari Ini</option>
+          <option value="week">7 Hari Terakhir</option>
+          <option value="month">30 Hari Terakhir</option>
+         </select>
+        </div>
+       </div>
+
+       <div id="admin-results-list" class="space-y-4">
+        <p class="text-slate-400 text-center py-12">Belum ada riwayat hasil tes</p>
+       </div>
+      </div>
+     </div>
      
      <div id="admin-monitoring" class="hidden fade-in">
       <div class="card p-6 md:p-8">
@@ -328,16 +371,6 @@
        <p class="text-slate-500 text-sm mb-6">Pantau aktivitas siswa yang sedang aktif mengerjakan ujian secara *real-time*.</p>
        <div id="monitoring-list" class="space-y-3">
         <p class="text-slate-400 text-center py-12">Tidak ada siswa yang aktif saat ini</p>
-       </div>
-      </div>
-     </div>
-     
-     <div id="admin-results" class="hidden fade-in">
-      <div class="card p-6 md:p-8">
-       <h3 class="text-xl font-bold text-navy mb-2">Hasil Ujian Siswa</h3>
-       <p class="text-slate-500 text-sm mb-6">Rekapitulasi nilai dan hasil akhir seluruh siswa yang telah menyelesaikan ujian.</p>
-       <div id="results-list" class="space-y-3">
-        <p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>
        </div>
       </div>
      </div>
@@ -444,25 +477,31 @@
         <p class="text-slate-400 text-center py-12">Tidak ada paket soal tersedia</p>
        </div>
       </div>
-      
-      <!-- RIWAYAT UJIAN Dikelompokkan Berdasarkan Paket Soal & Filter Waktu -->
+
       <div class="card p-6 md:p-8">
-       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+       <h3 class="text-xl font-bold text-navy mb-2">Riwayat Hasil Ujian Saya</h3>
+       <p class="text-slate-500 text-sm mb-6">Daftar riwayat tes kecermatan yang telah Anda selesaikan.</p>
+
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-200">
         <div>
-          <h3 class="text-xl font-bold text-navy mb-1">Riwayat Hasil Ujian Saya</h3>
-          <p class="text-slate-500 text-sm">Dikelompokkan berdasarkan paket soal dan dapat difilter berdasarkan waktu.</p>
+         <label class="block text-xs font-bold text-slate-600 mb-1">Filter Paket Soal:</label>
+         <select id="student-filter-package" onchange="renderStudentTestResults()" class="input-field w-full text-sm">
+          <option value="all">Semua Paket Soal</option>
+         </select>
         </div>
-        <div class="flex items-center gap-2 w-full sm:w-auto">
-          <select id="student-filter-time" onchange="renderStudentResults()" class="input-field text-sm py-2 px-3 bg-white">
-            <option value="all">Semua Waktu</option>
-            <option value="today">Hari Ini</option>
-            <option value="week">7 Hari Terakhir</option>
-            <option value="month">30 Hari Terakhir</option>
-          </select>
+        <div>
+         <label class="block text-xs font-bold text-slate-600 mb-1">Filter Waktu Pengerjaan:</label>
+         <select id="student-filter-time" onchange="renderStudentTestResults()" class="input-field w-full text-sm">
+          <option value="all">Semua Waktu</option>
+          <option value="today">Hari Ini</option>
+          <option value="week">7 Hari Terakhir</option>
+          <option value="month">30 Hari Terakhir</option>
+         </select>
         </div>
        </div>
-       <div id="student-results-list" class="space-y-6">
-        <p class="text-slate-400 text-center py-12">Belum ada riwayat ujian</p>
+
+       <div id="student-results-list" class="space-y-4">
+        <p class="text-slate-400 text-center py-12">Belum ada riwayat hasil tes</p>
        </div>
       </div>
      </div>
@@ -603,7 +642,6 @@
        </div>
       </div>
       
-      <!-- ANALISIS KEMAMPUAN SISWA DALAM BENTUK KALIMAT & SARAN PERBAIKAN -->
       <div class="card p-8">
        <h3 class="text-xl font-bold text-navy mb-4">Analisis Kemampuan & Saran Perbaikan</h3>
        <div id="result-analysis" class="space-y-4"></div>
@@ -611,6 +649,39 @@
       
       <button onclick="backToStudentDashboard()" class="w-full btn-primary py-4 rounded-2xl font-bold text-lg shadow-lg"> Kembali ke Dashboard Siswa </button>
      </div>
+    </div>
+   </div>
+
+   <div id="result-detail-modal" class="fixed inset-0 modal-overlay flex items-center justify-center p-4 hidden z-50 overflow-y-auto">
+    <div class="card p-6 md:p-8 max-w-2xl w-full my-8 fade-in">
+     <div class="flex items-center justify-between mb-4 border-b border-slate-200 pb-3">
+      <div>
+       <h3 id="modal-result-title" class="text-xl font-bold text-navy">Detail Hasil Tes</h3>
+       <p id="modal-result-subtitle" class="text-xs text-slate-500 font-medium"></p>
+      </div>
+      <button onclick="closeResultDetailModal()" class="text-slate-400 hover:text-navy text-2xl font-bold">&times;</button>
+     </div>
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div class="bg-emerald-50 p-3 rounded-xl text-center border border-emerald-100">
+       <p class="text-xs font-semibold text-emerald-600">Benar</p>
+       <p id="modal-result-correct" class="text-xl font-extrabold text-emerald-800">0</p>
+      </div>
+      <div class="bg-rose-50 p-3 rounded-xl text-center border border-rose-100">
+       <p class="text-xs font-semibold text-rose-600">Salah</p>
+       <p id="modal-result-wrong" class="text-xl font-extrabold text-rose-800">0</p>
+      </div>
+      <div class="bg-slate-100 p-3 rounded-xl text-center border border-slate-200">
+       <p class="text-xs font-semibold text-slate-600">Tidak Dijawab</p>
+       <p id="modal-result-unanswered" class="text-xl font-extrabold text-slate-800">0</p>
+      </div>
+      <div class="bg-amber-50 p-3 rounded-xl text-center border border-amber-200">
+       <p class="text-xs font-bold text-gold-dark">Nilai</p>
+       <p id="modal-result-score" class="text-xl font-extrabold text-navy">0</p>
+      </div>
+     </div>
+     <h4 class="font-bold text-navy text-sm mb-3">Detail Per Kolom:</h4>
+     <div id="modal-column-results" class="space-y-2 mb-6 max-h-60 overflow-y-auto pr-1"></div>
+     <button onclick="closeResultDetailModal()" class="w-full btn-primary py-3 rounded-xl font-semibold shadow-md">Tutup</button>
     </div>
    </div>
    
@@ -695,7 +766,8 @@
       students: [],
       packages: [],
       trash: [],
-      results: [],
+      testResults: [],
+      studentAttempts: {},
       activities: [],
       adminPassword: '1234',
       adminEmail: '',
@@ -735,13 +807,14 @@
     window.dataHandler = {
       onDataChanged(data) {
         if (!data || data.length === 0) {
-          appData = { students: [], packages: [], trash: [], results: [], activities: [], adminPassword: '1234', adminEmail: '', frontPageTitle: 'Tes Kecermatan Polri', frontPageLogo: null, frontPageBg: null };
+          appData = { students: [], packages: [], trash: [], testResults: [], studentAttempts: {}, activities: [], adminPassword: '1234', adminEmail: '', frontPageTitle: 'Tes Kecermatan Polri', frontPageLogo: null, frontPageBg: null };
         } else {
           data.forEach(record => {
             if (record.type === 'app_data') {
               try {
                 const parsed = JSON.parse(record.data);
                 appData = { ...appData, ...parsed };
+                if (!appData.testResults) appData.testResults = [];
                 if (!appData.frontPageTitle) appData.frontPageTitle = 'Tes Kecermatan Polri';
               } catch (e) {
                 console.error('Parse error:', e);
@@ -758,9 +831,15 @@
         if(document.getElementById('packages-list')) renderPackagesList();
         if(document.getElementById('trash-list')) renderTrashList();
         if(document.getElementById('monitoring-list')) renderMonitoring();
-        if(document.getElementById('results-list')) renderResultsList();
-        if(document.getElementById('student-packages-list') && currentStudent) renderStudentPackages();
-        if(document.getElementById('student-results-list') && currentStudent) renderStudentResults();
+        if(document.getElementById('admin-results-list')) {
+          populateAdminStudentFilter();
+          renderAdminTestResults();
+        }
+        if(document.getElementById('student-packages-list') && currentStudent) {
+          renderStudentPackages();
+          populateStudentPackageFilter();
+          renderStudentTestResults();
+        }
         
         if (appData.frontPageTitle) {
           const titleEl = document.getElementById('app-title');
@@ -930,13 +1009,17 @@
     }
     
     function showAdminTab(tabName) {
-      const tabs = ['students', 'questions', 'monitoring', 'results', 'trash', 'settings'];
+      const tabs = ['students', 'questions', 'results', 'monitoring', 'trash', 'settings'];
       tabs.forEach(tab => {
         document.getElementById(`admin-${tab}`).classList.add('hidden');
         document.getElementById(`tab-${tab}`).classList.remove('active');
       });
       document.getElementById(`admin-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
+      if (tabName === 'results') {
+        populateAdminStudentFilter();
+        renderAdminTestResults();
+      }
     }
     
     function togglePassword(inputId, eyeId) {
@@ -976,6 +1059,179 @@
     function closeConfirm() {
       document.getElementById('confirm-modal').classList.add('hidden');
       confirmCallback = null;
+    }
+
+    function populateAdminStudentFilter() {
+      const filterSelect = document.getElementById('admin-filter-student');
+      if (!filterSelect) return;
+      const currentVal = filterSelect.value;
+      filterSelect.innerHTML = '<option value="all">Semua Siswa</option>' + 
+        (appData.students || []).map(s => `<option value="${s.id}">${s.username}</option>`).join('');
+      filterSelect.value = currentVal || 'all';
+    }
+
+    function populateStudentPackageFilter() {
+      const filterSelect = document.getElementById('student-filter-package');
+      if (!filterSelect) return;
+      const currentVal = filterSelect.value;
+      filterSelect.innerHTML = '<option value="all">Semua Paket Soal</option>' + 
+        (appData.packages || []).map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+      filterSelect.value = currentVal || 'all';
+    }
+
+    function filterByTime(timestamp, timeFilter) {
+      if (timeFilter === 'all') return true;
+      const date = new Date(timestamp);
+      const now = new Date();
+      if (timeFilter === 'today') {
+        return date.toDateString() === now.toDateString();
+      }
+      if (timeFilter === 'week') {
+        const diffDays = (now - date) / (1000 * 60 * 60 * 24);
+        return diffDays <= 7;
+      }
+      if (timeFilter === 'month') {
+        const diffDays = (now - date) / (1000 * 60 * 60 * 24);
+        return diffDays <= 30;
+      }
+      return true;
+    }
+
+    function deleteTestResultAdmin(resultId) {
+      showConfirm('Hapus Hasil Ujian', 'Apakah Anda yakin ingin menghapus riwayat hasil tes ini?', () => {
+        appData.testResults = (appData.testResults || []).filter(r => r.id !== resultId);
+        saveAppData();
+        renderAdminTestResults();
+        showToast('Hasil tes berhasil dihapus');
+      });
+    }
+
+    function clearAllTestResultsAdmin() {
+      if (!appData.testResults || appData.testResults.length === 0) {
+        showToast('Tidak ada riwayat hasil tes untuk dihapus', 'error');
+        return;
+      }
+      showConfirm('Hapus Semua Riwayat', 'Apakah Anda yakin ingin menghapus SELURUH riwayat hasil tes siswa?', () => {
+        appData.testResults = [];
+        saveAppData();
+        renderAdminTestResults();
+        showToast('Seluruh riwayat hasil tes berhasil dihapus');
+      });
+    }
+
+    function viewResultDetail(resultId) {
+      const res = (appData.testResults || []).find(r => r.id === resultId);
+      if (!res) return;
+      document.getElementById('modal-result-title').textContent = res.packageName || 'Hasil Tes';
+      document.getElementById('modal-result-subtitle').textContent = `Siswa: ${res.studentName} • ${new Date(res.timestamp).toLocaleString('id-ID')}`;
+      document.getElementById('modal-result-correct').textContent = res.totalCorrect;
+      document.getElementById('modal-result-wrong').textContent = res.totalWrong;
+      document.getElementById('modal-result-unanswered').textContent = res.totalUnanswered;
+      document.getElementById('modal-result-score').textContent = res.score;
+
+      const colContainer = document.getElementById('modal-column-results');
+      colContainer.innerHTML = (res.columnResults || []).map((col, idx) => {
+        const colScore = Math.round((col.correct / (col.correct + col.wrong + col.unanswered)) * 100) || 0;
+        return `
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs md:text-sm">
+            <span class="font-bold text-navy">Kolom ${idx + 1}</span>
+            <div class="flex items-center gap-3 font-semibold">
+              <span class="text-emerald-600">✓ ${col.correct}</span>
+              <span class="text-rose-600">✗ ${col.wrong}</span>
+              <span class="text-slate-400">○ ${col.unanswered}</span>
+              <span class="font-extrabold ${getScoreColor(colScore)}">${colScore}%</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('result-detail-modal').classList.remove('hidden');
+    }
+
+    function closeResultDetailModal() {
+      document.getElementById('result-detail-modal').classList.add('hidden');
+    }
+
+    function renderAdminTestResults() {
+      const container = document.getElementById('admin-results-list');
+      if (!container) return;
+
+      const typeFilter = document.getElementById('admin-filter-type')?.value || 'all';
+      const studentFilter = document.getElementById('admin-filter-student')?.value || 'all';
+      const timeFilter = document.getElementById('admin-filter-time')?.value || 'all';
+
+      const typeLabels = { number: 'Angka Hilang', letter: 'Huruf Hilang', symbol: 'Simbol Hilang' };
+
+      const filtered = (appData.testResults || []).filter(res => {
+        if (typeFilter !== 'all' && res.packageType !== typeFilter) return false;
+        if (studentFilter !== 'all' && res.studentId !== studentFilter) return false;
+        if (!filterByTime(res.timestamp, timeFilter)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 text-center py-12">Tidak ada data hasil tes yang sesuai dengan filter</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(res => `
+        <div class="p-4 md:p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-navy text-base md:text-lg">${res.studentName}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-slate-200 font-semibold text-slate-700">${typeLabels[res.packageType] || 'Umum'}</span>
+            </div>
+            <p class="text-xs font-semibold text-slate-600">${res.packageName}</p>
+            <p class="text-xs text-slate-400 font-medium">${new Date(res.timestamp).toLocaleString('id-ID')}</p>
+          </div>
+          <div class="flex items-center justify-between md:justify-end gap-4">
+            <div class="text-right">
+              <p class="text-2xl font-extrabold ${getScoreColor(res.score)}">${res.score}</p>
+              <p class="text-xs text-slate-500 font-medium">B: ${res.totalCorrect} | S: ${res.totalWrong} | K: ${res.totalUnanswered}</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="viewResultDetail('${res.id}')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">Detail</button>
+              <button onclick="deleteTestResultAdmin('${res.id}')" class="px-3 py-2 rounded-xl text-xs font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors">Hapus</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderStudentTestResults() {
+      const container = document.getElementById('student-results-list');
+      if (!container || !currentStudent) return;
+
+      const packageFilter = document.getElementById('student-filter-package')?.value || 'all';
+      const timeFilter = document.getElementById('student-filter-time')?.value || 'all';
+
+      const filtered = (appData.testResults || []).filter(res => {
+        if (res.studentId !== currentStudent.id) return false;
+        if (packageFilter !== 'all' && res.packageId !== packageFilter) return false;
+        if (!filterByTime(res.timestamp, timeFilter)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada riwayat hasil tes yang sesuai</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(res => `
+        <div class="p-4 md:p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+          <div class="space-y-1">
+            <p class="font-bold text-navy text-base md:text-lg">${res.packageName}</p>
+            <p class="text-xs text-slate-400 font-medium">${new Date(res.timestamp).toLocaleString('id-ID')}</p>
+          </div>
+          <div class="flex items-center justify-between md:justify-end gap-4">
+            <div class="text-right">
+              <p class="text-2xl font-extrabold ${getScoreColor(res.score)}">${res.score}</p>
+              <p class="text-xs text-slate-500 font-medium">B: ${res.totalCorrect} | S: ${res.totalWrong} | K: ${res.totalUnanswered}</p>
+            </div>
+            <button onclick="viewResultDetail('${res.id}')" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">Detail</button>
+          </div>
+        </div>
+      `).join('');
     }
     
     function adminLogin() {
@@ -1184,43 +1440,6 @@
           </div>
         </div>
       `).join('');
-    }
-    
-    function renderResultsList() {
-      const container = document.getElementById('results-list');
-      if (!container) return;
-      
-      const validResults = (appData.results || []);
-      
-      if (validResults.length === 0) {
-        container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada hasil ujian</p>';
-        return;
-      }
-      
-      container.innerHTML = validResults.map(result => `
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200 gap-4">
-          <div>
-            <p class="font-bold text-navy text-base">${result.studentName || 'Siswa'} - <span class="text-gold-dark">${result.packageName}</span></p>
-            <p class="text-xs text-slate-500 mt-0.5">Selesai pada: ${new Date(result.completedAt).toLocaleDateString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</p>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="text-right">
-              <p class="text-2xl font-extrabold ${getScoreColor(result.score)}">${result.score}</p>
-              <p class="text-xs font-semibold text-slate-500">${getScoreCategory(result.score)}</p>
-            </div>
-            <button onclick="deleteResult('${result.id}')" class="px-3.5 py-2 rounded-xl text-sm font-semibold bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors">Hapus</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function deleteResult(resultId) {
-      showConfirm('Hapus Hasil Ujian', 'Apakah Anda yakin ingin menghapus hasil ujian ini dari data admin?', () => {
-        appData.results = appData.results.filter(r => r.id !== resultId);
-        saveAppData();
-        renderResultsList();
-        showToast('Hasil ujian berhasil dihapus');
-      });
     }
     
     function setQuestionType(type) {
@@ -1695,7 +1914,8 @@
       updateActivity(student.id, 'Online - Dashboard');
       showPanel('student-dashboard');
       renderStudentPackages();
-      renderStudentResults();
+      populateStudentPackageFilter();
+      renderStudentTestResults();
     }
     
     function studentLogout() {
@@ -1715,7 +1935,7 @@
       }
       
       container.innerHTML = activePackages.map(pkg => {
-        const attempts = appData.results.filter(r => r.studentId === currentStudent.id && r.packageId === pkg.id).length;
+        const attempts = (appData.studentAttempts && appData.studentAttempts[currentStudent.id] && appData.studentAttempts[currentStudent.id][pkg.id]) || 0;
         const maxAttempts = pkg.maxAttempts || 1;
         
         if (attempts >= maxAttempts) {
@@ -1787,87 +2007,11 @@
       showPanel('test-preparation');
     }
     
-    // RENDER RIWAYAT UJIAN: Dikelompokkan Berdasarkan Paket Soal & Difilter Berdasarkan Waktu
-    function renderStudentResults() {
-      const container = document.getElementById('student-results-list');
-      if (!currentStudent) return;
-      
-      const filterTime = document.getElementById('student-filter-time').value;
-      const now = new Date().getTime();
-
-      let studentResults = appData.results.filter(r => r.studentId === currentStudent.id);
-
-      // Filter berdasarkan waktu ujian
-      if (filterTime === 'today') {
-        studentResults = studentResults.filter(r => {
-          const rDate = new Date(r.completedAt);
-          const today = new Date();
-          return rDate.toDateString() === today.toDateString();
-        });
-      } else if (filterTime === 'week') {
-        const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
-        studentResults = studentResults.filter(r => new Date(r.completedAt).getTime() >= sevenDaysAgo);
-      } else if (filterTime === 'month') {
-        const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
-        studentResults = studentResults.filter(r => new Date(r.completedAt).getTime() >= thirtyDaysAgo);
-      }
-
-      if (studentResults.length === 0) {
-        container.innerHTML = '<p class="text-slate-400 text-center py-12">Belum ada riwayat ujian yang sesuai</p>';
-        return;
-      }
-
-      // Kelompokkan berdasarkan Paket Soal
-      const groupedByPackage = {};
-      studentResults.forEach(result => {
-        if (!groupedByPackage[result.packageId]) {
-          groupedByPackage[result.packageId] = {
-            packageName: result.packageName,
-            attempts: []
-          };
-        }
-        groupedByPackage[result.packageId].attempts.push(result);
-      });
-
-      let html = '';
-      for (const pkgId in groupedByPackage) {
-        const group = groupedByPackage[pkgId];
-        // Urutkan berdasarkan waktu terbaru
-        group.attempts.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-
-        html += `
-          <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl shadow-sm">
-            <h4 class="font-bold text-navy text-lg mb-3 flex items-center gap-2">
-              <span>📦</span> ${group.packageName} 
-              <span class="text-xs bg-gold/20 text-gold-dark px-2.5 py-1 rounded-full font-semibold">(${group.attempts.length} Percobaan)</span>
-            </h4>
-            <div class="space-y-3">
-              ${group.attempts.map((res, index) => `
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-xl border border-slate-100 shadow-sm gap-3">
-                  <div>
-                    <p class="font-semibold text-navy text-sm">Percobaan ke-${group.attempts.length - index}</p>
-                    <p class="text-xs text-slate-500 mt-0.5">Waktu: ${new Date(res.completedAt).toLocaleDateString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</p>
-                  </div>
-                  <div class="flex items-center gap-4">
-                    <div class="text-right">
-                      <p class="text-xl font-extrabold ${getScoreColor(res.score)}">${res.score} <span class="text-xs font-normal text-slate-500">(${getScoreCategory(res.score)})</span></p>
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-
-      container.innerHTML = html;
-    }
-    
     function startTest(packageId) {
       const pkg = appData.packages.find(p => p.id === packageId);
       if (!pkg) return;
       
-      const attempts = appData.results.filter(r => r.studentId === currentStudent.id && r.packageId === packageId).length;
+      const attempts = (appData.studentAttempts && appData.studentAttempts[currentStudent.id] && appData.studentAttempts[currentStudent.id][packageId]) || 0;
       const maxAttempts = pkg.maxAttempts || 1;
 
       if (attempts >= maxAttempts) {
@@ -2085,28 +2229,33 @@
       const score = Math.round((totalCorrect / totalQuestions) * 100);
       const metrics = calculatePerformanceMetrics(currentTest.columnResults);
       
-      const result = {
+      if (!appData.studentAttempts) appData.studentAttempts = {};
+      if (!appData.studentAttempts[currentStudent.id]) appData.studentAttempts[currentStudent.id] = {};
+      appData.studentAttempts[currentStudent.id][currentTest.package.id] = (appData.studentAttempts[currentStudent.id][currentTest.package.id] || 0) + 1;
+
+      if (!appData.testResults) appData.testResults = [];
+      const resultData = {
         id: Date.now().toString(),
         studentId: currentStudent.id,
         studentName: currentStudent.username,
         packageId: currentTest.package.id,
         packageName: currentTest.package.name,
         packageType: currentTest.package.type,
+        score,
         totalCorrect,
         totalWrong,
         totalUnanswered,
-        score,
-        metrics,
-        columnResults: currentTest.columnResults.map(col => ({
-          correct: col.correct,
-          wrong: col.wrong,
-          unanswered: col.unanswered
-        })),
-        completedAt: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        columnResults: currentTest.columnResults.map(c => ({
+          correct: c.correct,
+          wrong: c.wrong,
+          unanswered: c.unanswered
+        }))
       };
-      
-      appData.results.push(result);
+      appData.testResults.unshift(resultData);
+
       saveAppData();
+
       showPanel('test-result');
       
       document.getElementById('result-correct').textContent = totalCorrect;
@@ -2133,7 +2282,7 @@
       }).join('');
       
       drawPerformanceChart(metrics);
-      document.getElementById('result-analysis').innerHTML = generateAnalysis(result);
+      document.getElementById('result-analysis').innerHTML = generateAnalysis({ score, totalCorrect, totalWrong, metrics });
     }
     
     function calculatePerformanceMetrics(columnResults) {
@@ -2239,12 +2388,10 @@
       });
     }
     
-    // ANALISIS KEMAMPUAN SISWA DALAM BENTUK KALIMAT & SARAN PERBAIKAN
     function generateAnalysis(result) {
       const { score, totalCorrect, totalWrong, metrics } = result;
       let analysisList = [];
 
-      // Analisis Umum & Tingkat Kecermatan
       if (score >= 90) {
         analysisList.push({
           type: 'success',
@@ -2275,7 +2422,6 @@
         });
       }
 
-      // Analisis Keajengan & Ketahanan
       if (metrics.avgConsistency >= 80) {
         analysisList.push({
           type: 'info',
@@ -2292,7 +2438,6 @@
         });
       }
 
-      // Saran Perbaikan Konkret
       analysisList.push({
         type: 'suggestion',
         icon: '💡',
@@ -2314,7 +2459,8 @@
     function backToStudentDashboard() {
       showPanel('student-dashboard');
       renderStudentPackages();
-      renderStudentResults();
+      populateStudentPackageFilter();
+      renderStudentTestResults();
     }
 
     function backToStudentDashboardFromPrep() {
@@ -2367,8 +2513,12 @@
     window.backToStudentDashboardFromPrep = backToStudentDashboardFromPrep;
     window.closeConfirm = closeConfirm;
     window.saveFrontPageSettings = saveFrontPageSettings;
-    window.deleteResult = deleteResult;
-    window.renderStudentResults = renderStudentResults;
+    window.renderAdminTestResults = renderAdminTestResults;
+    window.renderStudentTestResults = renderStudentTestResults;
+    window.deleteTestResultAdmin = deleteTestResultAdmin;
+    window.clearAllTestResultsAdmin = clearAllTestResultsAdmin;
+    window.viewResultDetail = viewResultDetail;
+    window.closeResultDetailModal = closeResultDetailModal;
 
     window.onload = initApp;
   </script>
