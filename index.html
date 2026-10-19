@@ -285,6 +285,20 @@
                 <input type="number" id="package-max-attempts" class="input-field w-full text-base" placeholder="1" min="1" value="1" onkeydown="if(event.key==='Enter') saveQuestionPackage()">
             </div>
         </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-2">Terapkan / Akses Paket Soal Ke Akun Siswa</label>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <label class="flex items-center gap-2.5 font-bold text-navy text-sm cursor-pointer mb-3 pb-2 border-b border-slate-200">
+                    <input type="checkbox" id="assign-all-students" onchange="toggleAssignAllStudents(this.checked)" class="w-4 h-4 text-gold rounded border-slate-300 focus:ring-gold">
+                    <span>Semua Orang / Semua Siswa</span>
+                </label>
+                <div id="assign-students-checklist" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-48 overflow-y-auto pr-1">
+                    <p class="text-slate-400 text-xs col-span-full">Belum ada akun siswa terdaftar</p>
+                </div>
+            </div>
+        </div>
+
         <div>
          <label class="block text-sm font-semibold text-slate-700 mb-3">Jenis Soal</label>
          <div class="flex gap-3 flex-wrap">
@@ -402,7 +416,7 @@
             <svg id="current-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
           </div>
           <div class="relative"><input type="password" id="new-admin-password" class="input-field w-full pr-12" placeholder="Password Baru" onkeydown="if(event.key==='Enter') changeAdminPassword()"> <button onclick="togglePassword('new-admin-password', 'new-eye')" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-            <svg id="new-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
+            <svg id="new-eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg></button>
           </div>
           <button onclick="changeAdminPassword()" class="btn-primary px-6 py-3.5 rounded-xl font-semibold w-full shadow-md">Simpan Password Baru</button>
           <p id="password-change-message" class="text-sm text-center hidden font-medium"></p>
@@ -829,6 +843,7 @@
     function updateAllViews() {
         if(document.getElementById('students-list')) renderStudentsList();
         if(document.getElementById('packages-list')) renderPackagesList();
+        if(document.getElementById('assign-students-checklist')) renderAssignStudentsChecklist();
         if(document.getElementById('trash-list')) renderTrashList();
         if(document.getElementById('monitoring-list')) renderMonitoring();
         if(document.getElementById('admin-results-list')) {
@@ -1016,6 +1031,9 @@
       });
       document.getElementById(`admin-${tabName}`).classList.remove('hidden');
       document.getElementById(`tab-${tabName}`).classList.add('active');
+      if (tabName === 'questions') {
+        renderAssignStudentsChecklist();
+      }
       if (tabName === 'results') {
         populateAdminStudentFilter();
         renderAdminTestResults();
@@ -1357,6 +1375,7 @@
       document.getElementById('new-student-password').value = '';
       showToast('Akun siswa berhasil dibuat');
       renderStudentsList();
+      renderAssignStudentsChecklist();
     }
     
     function editStudent(id) {
@@ -1393,6 +1412,7 @@
           student.password = password;
           saveAppData();
           renderStudentsList();
+          renderAssignStudentsChecklist();
           showToast('Akun siswa berhasil diperbarui');
       }
       closeEditStudent();
@@ -1412,6 +1432,7 @@
         appData.students = appData.students.filter(s => s.id !== studentId);
         saveAppData();
         renderStudentsList();
+        renderAssignStudentsChecklist();
         showToast('Akun siswa berhasil dihapus');
       });
     }
@@ -1440,6 +1461,73 @@
           </div>
         </div>
       `).join('');
+    }
+
+    function renderAssignStudentsChecklist(assignedStudentIds = null, targetAll = true) {
+      const container = document.getElementById('assign-students-checklist');
+      if (!container) return;
+
+      const allCheckbox = document.getElementById('assign-all-students');
+
+      if (!appData.students || appData.students.length === 0) {
+        container.innerHTML = '<p class="text-slate-400 text-xs col-span-full">Belum ada akun siswa terdaftar</p>';
+        if (allCheckbox) {
+          allCheckbox.checked = true;
+          allCheckbox.disabled = true;
+        }
+        return;
+      }
+
+      if (allCheckbox) allCheckbox.disabled = false;
+
+      let isTargetAll = targetAll;
+      let targetIds = assignedStudentIds;
+
+      if (targetIds === null) {
+        isTargetAll = allCheckbox ? allCheckbox.checked : true;
+        targetIds = Array.from(document.querySelectorAll('.assign-student-item:checked')).map(cb => cb.value);
+      }
+
+      if (allCheckbox) {
+        allCheckbox.checked = isTargetAll;
+      }
+
+      container.innerHTML = appData.students.map(s => {
+        const isChecked = isTargetAll || (Array.isArray(targetIds) && targetIds.includes(s.id));
+        return `
+          <label class="flex items-center gap-2 p-2 bg-white rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 cursor-pointer hover:border-gold/50 transition-colors">
+            <input type="checkbox" value="${s.id}" class="assign-student-item w-4 h-4 text-gold rounded border-slate-300 focus:ring-gold" ${isChecked ? 'checked' : ''} onchange="handleStudentCheckChange()">
+            <span class="truncate">${s.username}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleAssignAllStudents(isChecked) {
+      const studentCheckboxes = document.querySelectorAll('.assign-student-item');
+      studentCheckboxes.forEach(cb => {
+        cb.checked = isChecked;
+      });
+    }
+
+    function handleStudentCheckChange() {
+      const studentCheckboxes = Array.from(document.querySelectorAll('.assign-student-item'));
+      const allCheckbox = document.getElementById('assign-all-students');
+      if (!studentCheckboxes.length || !allCheckbox) return;
+
+      const allChecked = studentCheckboxes.every(cb => cb.checked);
+      allCheckbox.checked = allChecked;
+    }
+
+    function getSelectedAssignedStudents() {
+      const allCheckbox = document.getElementById('assign-all-students');
+      const isTargetAll = allCheckbox ? allCheckbox.checked : true;
+      if (isTargetAll) {
+        return { targetAll: true, assignedStudents: [] };
+      }
+      const studentCheckboxes = Array.from(document.querySelectorAll('.assign-student-item:checked'));
+      const selectedIds = studentCheckboxes.map(cb => cb.value);
+      return { targetAll: false, assignedStudents: selectedIds };
     }
     
     function setQuestionType(type) {
@@ -1650,6 +1738,10 @@
       document.getElementById('package-pin').value = pkg.pin || '';
       document.getElementById('package-max-attempts').value = pkg.maxAttempts || 1;
 
+      const targetAll = pkg.targetAll !== undefined ? pkg.targetAll : true;
+      const assignedStudents = pkg.assignedStudents || [];
+      renderAssignStudentsChecklist(assignedStudents, targetAll);
+
       questionType = pkg.type;
       ['number', 'letter', 'symbol'].forEach(t => {
           document.getElementById(`type-${t}`).classList.toggle('active', t === pkg.type);
@@ -1669,6 +1761,7 @@
       document.getElementById('package-name').value = '';
       document.getElementById('package-pin').value = '';
       document.getElementById('package-max-attempts').value = '1';
+      renderAssignStudentsChecklist(null, true);
       columnInputData = Array(10).fill(null).map(() => []);
       initColumnInputs();
     }
@@ -1677,9 +1770,15 @@
       const packageName = document.getElementById('package-name').value.trim();
       const pin = document.getElementById('package-pin').value.trim();
       const maxAttempts = parseInt(document.getElementById('package-max-attempts').value) || 1;
+      const { targetAll, assignedStudents } = getSelectedAssignedStudents();
       
       if (!packageName) {
         showToast('Nama paket soal harus diisi', 'error');
+        return;
+      }
+
+      if (!targetAll && assignedStudents.length === 0) {
+        showToast('Pilih minimal satu akun siswa atau centang Semua Orang', 'error');
         return;
       }
       
@@ -1706,6 +1805,8 @@
             name: packageName,
             pin: pin,
             maxAttempts: maxAttempts,
+            targetAll: targetAll,
+            assignedStudents: assignedStudents,
             type: questionType,
             columns: columns,
             updatedAt: new Date().toISOString()
@@ -1719,6 +1820,8 @@
           name: packageName,
           pin: pin,
           maxAttempts: maxAttempts,
+          targetAll: targetAll,
+          assignedStudents: assignedStudents,
           type: questionType,
           columns,
           active: true,
@@ -1763,7 +1866,20 @@
         return;
       }
       const typeLabels = { number: 'Angka Hilang', letter: 'Huruf Hilang', symbol: 'Simbol Hilang' };
-      container.innerHTML = appData.packages.map(pkg => `
+      container.innerHTML = appData.packages.map(pkg => {
+        let accessText = 'Semua Siswa';
+        if (pkg.targetAll === false) {
+          if (pkg.assignedStudents && pkg.assignedStudents.length > 0) {
+            const studentNames = pkg.assignedStudents.map(id => {
+              const s = appData.students.find(st => st.id === id);
+              return s ? s.username : 'Unknown';
+            });
+            accessText = `${pkg.assignedStudents.length} Siswa (${studentNames.join(', ')})`;
+          } else {
+            accessText = 'Tidak ada siswa terpilih';
+          }
+        }
+        return `
         <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm">
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
             <div class="flex items-center gap-3">
@@ -1773,6 +1889,7 @@
                 <p class="text-xs text-slate-500 font-medium">
                   ${typeLabels[pkg.type]} • 10 Kolom • Maks: ${pkg.maxAttempts || 1} Percobaan ${pkg.pin ? '• <span class="text-gold-dark font-bold">🔒 Ber-PIN</span>' : ''}
                 </p>
+                <p class="text-xs text-slate-600 font-semibold mt-1">👤 Akses: <span class="text-navy">${accessText}</span></p>
               </div>
             </div>
             <div class="flex gap-2">
@@ -1784,7 +1901,8 @@
             </div>
           </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
     
     function renderTrashList() {
@@ -1927,7 +2045,13 @@
     
     function renderStudentPackages() {
       const container = document.getElementById('student-packages-list');
-      const activePackages = appData.packages.filter(p => p.active);
+      const activePackages = appData.packages.filter(p => {
+        if (!p.active) return false;
+        if (p.targetAll === false && Array.isArray(p.assignedStudents)) {
+          return p.assignedStudents.includes(currentStudent.id);
+        }
+        return true;
+      });
       
       if (activePackages.length === 0) {
         container.innerHTML = '<p class="text-slate-400 text-center py-12">Tidak ada paket soal tersedia</p>';
@@ -2519,6 +2643,8 @@
     window.clearAllTestResultsAdmin = clearAllTestResultsAdmin;
     window.viewResultDetail = viewResultDetail;
     window.closeResultDetailModal = closeResultDetailModal;
+    window.toggleAssignAllStudents = toggleAssignAllStudents;
+    window.handleStudentCheckChange = handleStudentCheckChange;
 
     window.onload = initApp;
   </script>
